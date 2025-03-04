@@ -27,6 +27,7 @@ class PortfolioPage extends StatelessWidget {
   PortfolioPage({super.key});
 
   final ItemScrollController _scrollController = ItemScrollController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // ✅ Added scaffoldKey
 
   void scrollToSection(int index) {
     _scrollController.scrollTo(
@@ -39,9 +40,24 @@ class PortfolioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // ✅ Pass scaffoldKey here
+      endDrawer: Drawer( // ✅ Add the Right End Drawer
+        child: Container(color: const Color(0xFF1A1A2E),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+          
+              _drawerItem('Home', 0),
+              _drawerItem('About', 1),
+              _drawerItem('Projects', 2),
+              _drawerItem('Contact', 3),
+            ],
+          ),
+        ),
+      ),
       body: Column(
         children: [
-          NavBar(onItemSelected: scrollToSection,),
+          NavBar(onItemSelected: scrollToSection, scaffoldKey: _scaffoldKey), // ✅ Pass scaffoldKey
           Expanded(
             child: ScrollablePositionedList.builder(
               itemScrollController: _scrollController,
@@ -57,6 +73,16 @@ class PortfolioPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _drawerItem(String title, int index) {
+    return ListTile(
+      title: Text(title,style: const TextStyle(color: Colors.white, fontSize: 18)),
+      onTap: () {
+        scrollToSection(index);
+        _scaffoldKey.currentState?.closeEndDrawer();
+      },
     );
   }
 
