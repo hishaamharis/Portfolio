@@ -10,31 +10,67 @@ class ProjectsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Project> projects = [
       Project(
-        name: 'Drive Duo',
-        description: 'Car Rental App',
-        imageUrl: 'assets/images/drive_duo.png',
-        techStack: ['Flutter', 'Firebase'],
-        githubUrl: 'https://github.com/hishaamharis/drive_duo.git'
-      ),
+          name: 'Drive Duo',
+          description:
+              'Car Rental App that allows users to rent cars from other users.',
+          imageUrl: 'assets/images/drive_duo.png',
+          techStack: [
+            'Flutter',
+            'Dart',
+            'Firebase Core',
+            'Firebase Authentication',
+            'Provider',
+            'Razorpay',
+          ],
+          githubUrl: 'https://github.com/hishaamharis/drive_duo.git'),
       Project(
         name: 'Quiz!z',
-        description: 'A quiz app',
+        description:
+            'A quiz app.Used to test your knowledge with multiple choice questions in different categories',
         imageUrl: 'assets/images/quiziz.png', // Replace with your image path
-        techStack: ['Flutter, Firebase'],
+        techStack: [
+          'Flutter',
+          'Dart',
+          'Firebase Core',
+          'Firebase Authentication',
+          'Google Sign-In',
+          'Cloud Firestore',
+          'Flutter Native Splash',
+        ],
       ),
       Project(
-        name: 'Task manager',
-        description: 'A task management app',
-        imageUrl: 'assets/images/task_manager.png', // Replace with your image path
-        techStack: ['Flutter, Firebase'],
-        githubUrl: "https://github.com/hishaamharis/task_manager.git"
-      ),
+          name: 'Task manager',
+          description: 'A task management app.Used to manage your daily tasks',
+          imageUrl:
+              'assets/images/task_manager.png', // Replace with your image path
+          techStack: [
+            'Flutter',
+            'Dart',
+            'GetX',
+            'Hive',
+            'Hive Flutter',
+            'UUID',
+            'Intl',
+          ],
+          githubUrl: "https://github.com/hishaamharis/task_manager.git"),
       Project(
         name: 'Projectsmate',
         description: 'A project management app',
         imageUrl:
             'assets/images/projectsmate.png', // Replace with your image path
-        techStack: ['Flutter, Firebase, Rest API,'],
+        techStack: [
+          'Flutter',
+          'Dart',
+          'Dio',
+          'Awesome Dio Interceptor',
+          'Firebase Core',
+          'Firebase Authentication',
+          'Google Sign-In',
+          'GoRouter',
+          'Provider',
+          'Shared Preferences',
+          'Flutter Secure Storage',
+        ],
       ),
     ];
 
