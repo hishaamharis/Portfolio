@@ -33,7 +33,7 @@ class ProjectCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16, // Slightly reduced font size
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 4),
@@ -41,7 +41,7 @@ class ProjectCard extends StatelessWidget {
                 project.description,
                 style: const TextStyle(
                   fontSize: 12, // Slightly reduced font size
-                  color: Colors.white70,
+                  color: Colors.black87,
                 ),
               ),
             ],

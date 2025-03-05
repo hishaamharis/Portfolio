@@ -1,27 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class SkillChip extends StatelessWidget {
+class SkillChip extends StatefulWidget {
   final String label;
-  final IconData icon;
-  final Color color ;
+  final SvgPicture? icon;
 
-  const SkillChip({super.key, required this.label, required this.icon, required this.color});
+  const SkillChip({
+    super.key,
+    required this.label,
+    this.icon,
+  });
+
+  @override
+  _SkillChipState createState() => _SkillChipState();
+}
+
+class _SkillChipState extends State<SkillChip> {
+  bool isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 16),
-          const SizedBox(width: 5),
-          Text(label, style: const TextStyle(color: Colors.white)),
-        ],
-      ),
-      backgroundColor: Color(0xFF365151), 
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(color: Color(0xFF99E3DC), width: 1), // Add a border
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isHovered ? Colors.teal.shade600 : const Color(0xFF8CA0C6),
+          borderRadius: BorderRadius.circular(20),
+          border: isHovered ? Border.all(color: Colors.white, width: 2) : null, // Border on hover
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.icon != null) ...[
+              SizedBox(
+                width: 20,
+                height: 20, 
+                child: widget.icon!,
+              ),
+              const SizedBox(width: 5),
+            ],
+            Text(widget.label, style: const TextStyle(color: Colors.white)),
+          ],
+        ),
       ),
     );
   }

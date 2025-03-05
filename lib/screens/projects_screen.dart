@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/constants/app_image.dart';
 import 'package:portfolio/model/project_model.dart';
 import 'package:portfolio/screens/project_detail_screen.dart';
 import 'package:portfolio/widgets/project_card.dart';
@@ -56,8 +57,7 @@ class ProjectsScreen extends StatelessWidget {
       Project(
         name: 'Projectsmate',
         description: 'A project management app',
-        imageUrl:
-            'assets/images/projectsmate.png', // Replace with your image path
+        imageUrl: AppImage.projectsmateImage, 
         techStack: [
           'Flutter',
           'Dart',

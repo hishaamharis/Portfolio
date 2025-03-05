@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:portfolio/constants/app_icons.dart';
 import 'package:portfolio/widgets/skill_chip.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -40,12 +42,14 @@ class AboutScreen extends StatelessWidget {
                         offset: const Offset(0, 5),
                       ),
                     ],
-                    border:Border.all(color: const Color(0xFFF9EBEB).withOpacity(0.1), width: 0.5),
+                    border: Border.all(
+                        color: const Color(0xFFF9EBEB).withOpacity(0.1),
+                        width: 0.5),
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
+                      const Text(
                         'About Me',
                         style: TextStyle(
                           fontSize: 32,
@@ -54,8 +58,8 @@ class AboutScreen extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 20),
-                      Text(
+                      const SizedBox(height: 20),
+                      const Text(
                         'I am a Flutter Developer with experience in building mobile and web applications. '
                         'I specialize in creating clean, efficient, and user-friendly apps that deliver a seamless experience.',
                         style: TextStyle(
@@ -65,17 +69,50 @@ class AboutScreen extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 80),
+                      const SizedBox(height: 80),
                       Wrap(
                         spacing: 10,
                         runSpacing: 10,
                         children: [
-                          SkillChip(label: 'Flutter', icon: Icons.code,color: Color(0xFF2E93FF),),
-                          SkillChip(label: 'Dart', icon: Icons.developer_mode,color: Color(0xFF8CA0C6),),
-                          SkillChip(label: 'Firebase', icon: Icons.cloud,color: Color(0xFFE54A42),),
-                          SkillChip(label: 'UI/UX Design', icon: Icons.design_services,color: Color(0xFFC6BDE0),),
-                          SkillChip(label: 'REST APIs', icon: Icons.api,color: Color(0xFFD0A818),),
-                          SkillChip(label: 'State Management', icon: Icons.settings,color: Color(0xFF048677),),
+                          SkillChip(
+                            label: 'Flutter',
+                            icon: SvgPicture.asset(AppIcons.flutterIcon),
+                          ),
+                          SkillChip(
+                            label: 'Dart',
+                            icon: SvgPicture.asset(AppIcons.dartIcon),
+                          ),
+                          SkillChip(
+                            label: 'Firebase',
+                            icon: SvgPicture.asset(AppIcons.firebaseIcon),
+                          ),
+                          SkillChip(
+                            label: 'UI/UX Design',
+                            icon: SvgPicture.asset(
+                              AppIcons.uiuxDesignIcon,
+                            ),
+                          ),
+                          SkillChip(
+                            label: 'REST APIs',
+                            icon: SvgPicture.asset(AppIcons.restApiIcon),
+                          ),
+                          SkillChip(
+                            label: 'State Management',
+                            icon:
+                                SvgPicture.asset(AppIcons.stateManagementIcon),
+                          ),
+                          SkillChip(
+                            label: 'Android Studio',
+                            icon: SvgPicture.asset(AppIcons.androidStudioIcon),
+                          ),
+                          SkillChip(
+                            label: 'GitHub',
+                            icon: SvgPicture.asset(AppIcons.githubIcon),
+                          ),
+                          SkillChip(
+                            label: 'Databases',
+                            icon: SvgPicture.asset(AppIcons.databaseIcon),
+                          ),
                         ],
                       ),
                     ],
