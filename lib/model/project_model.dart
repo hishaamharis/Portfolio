@@ -1,5 +1,6 @@
 class Project {
   final String name;
+  final String subtitle;
   final String description;
   final String imageUrl;
   final List<String> techStack; // Ensure this is a List<String>
@@ -7,6 +8,7 @@ class Project {
 
   Project({
     required this.name,
+    required this.subtitle,
     required this.description,
     required this.imageUrl,
     required this.techStack, // List of technologies
