@@ -8,6 +8,8 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -23,7 +25,9 @@ class AboutScreen extends StatelessWidget {
         ),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth < 500 ? 10 : 20, // Adjust padding for smaller screens
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -31,7 +35,7 @@ class AboutScreen extends StatelessWidget {
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.easeInOut,
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(screenWidth < 500 ? 15 : 20), // Adjust padding
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFFFFF).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -43,36 +47,38 @@ class AboutScreen extends StatelessWidget {
                       ),
                     ],
                     border: Border.all(
-                        color: const Color(0xFFF9EBEB).withOpacity(0.1),
-                        width: 0.5),
+                      color: const Color(0xFFF9EBEB).withOpacity(0.1),
+                      width: 0.5,
+                    ),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
+                      Text(
                         'About Me',
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: screenWidth < 500 ? 26 : 32, // Reduce text size for mobile
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
-                      const Text(
+                      Text(
                         'I am a Flutter Developer with experience in building mobile and web applications. '
                         'I specialize in creating clean, efficient, and user-friendly apps that deliver a seamless experience.',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: screenWidth < 500 ? 16 : 18, // Adjust font size
                           color: Colors.white70,
                           height: 1.5,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 80),
+                      const SizedBox(height: 40), // Adjust spacing
                       Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
+                        spacing: screenWidth < 500 ? 5 : 10, // Adjust spacing
+                        runSpacing: screenWidth < 500 ? 5 : 10,
+                        alignment: WrapAlignment.center,
                         children: [
                           SkillChip(
                             label: 'Flutter',
@@ -88,9 +94,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                           SkillChip(
                             label: 'UI/UX Design',
-                            icon: SvgPicture.asset(
-                              AppIcons.uiuxDesignIcon,
-                            ),
+                            icon: SvgPicture.asset(AppIcons.uiuxDesignIcon),
                           ),
                           SkillChip(
                             label: 'REST APIs',
@@ -98,8 +102,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                           SkillChip(
                             label: 'State Management',
-                            icon:
-                                SvgPicture.asset(AppIcons.stateManagementIcon),
+                            icon: SvgPicture.asset(AppIcons.stateManagementIcon),
                           ),
                           SkillChip(
                             label: 'Android Studio',
