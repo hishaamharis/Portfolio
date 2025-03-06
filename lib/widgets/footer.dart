@@ -8,8 +8,14 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool isMobile = screenSize.width < 600;
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 15 : 20,
+        horizontal: isMobile ? 10 : 20,
+      ),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -23,37 +29,41 @@ class Footer extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Social Links with Icons
+          // Social Links with Icons - Responsive Layout
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _footerLink(
-                icon: SvgPicture.asset(AppIcons.githubIcon),
+                icon: AppIcons.githubIcon,
                 title: 'GitHub',
                 url: 'https://github.com/hishaamharis',
+                isMobile: isMobile,
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: isMobile ? 10 : 20),
               _footerLink(
-                icon: SvgPicture.asset(AppIcons.linkedinIcon),
+                icon: AppIcons.linkedinIcon,
                 title: 'LinkedIn',
                 url: 'https://www.linkedin.com/in/muhammad-hisham-h/',
+                isMobile: isMobile,
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: isMobile ? 10 : 20),
               _footerLink(
-                icon: SvgPicture.asset(AppIcons.instagramIcon),
+                icon: AppIcons.instagramIcon,
                 title: 'Instagram',
                 url: 'https://www.instagram.com/hishaamharis/',
+                isMobile: isMobile,
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: isMobile ? 8 : 12),
           // Copyright Text
-          const Text(
+          Text(
             '© 2025 Muhammad Hisham. All Rights Reserved.',
             style: TextStyle(
               color: Colors.white70,
-              fontSize: 14,
+              fontSize: isMobile ? 12 : 14,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -61,9 +71,10 @@ class Footer extends StatelessWidget {
   }
 
   Widget _footerLink({
-    required SvgPicture icon,
+    required String icon,
     required String title,
     required String url,
+    required bool isMobile,
   }) {
     return InkWell(
       onTap: () => _launchUrl(url),
@@ -72,13 +83,13 @@ class Footer extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          icon,
-          const SizedBox(width: 8),
+          SvgPicture.asset(icon, width: isMobile ? 20 : 24),
+          SizedBox(width: isMobile ? 6 : 8),
           Text(
             title,
-            style: const TextStyle(
-              color: Color(0xff94acf4),
-              fontSize: 16,
+            style: TextStyle(
+              color: const Color(0xff94acf4),
+              fontSize: isMobile ? 14 : 16,
               decoration: TextDecoration.underline,
             ),
           ),
