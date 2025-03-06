@@ -14,12 +14,13 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: const Color(0xFF1A1A2E),
       title: Text(
-        'Hisham\'s Portfolio',
+        'Muhammad Hisham H', // ✅ Updated Title
         style: TextStyle(
           fontSize: isSmallScreen ? 20 : 24,
-          fontWeight: FontWeight.bold,
+          fontFamily: 'MonteCarlo', 
+          fontWeight: FontWeight.w400,
           color: Colors.white,
-          letterSpacing: 1.2,
+          letterSpacing: 1.5,
         ),
       ),
       actions: [
@@ -33,7 +34,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: const Icon(Icons.menu, color: Colors.white),
             onPressed: () {
-              scaffoldKey.currentState?.openEndDrawer(); // ✅ This fixes the issue
+              scaffoldKey.currentState?.openEndDrawer();
             },
           ),
       ],
@@ -45,7 +46,12 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       onPressed: () => onItemSelected(index),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 18, color: Colors.white),
+        style: const TextStyle(
+          fontSize: 18,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -70,8 +76,15 @@ class NavigationDrawer extends StatelessWidget {
           const DrawerHeader(
             decoration: BoxDecoration(color: Color(0xFF16213E)),
             child: Text(
-              'Hisham\'s Portfolio',
-              style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
+              'Muhammad Hisham H', // ✅ Updated Drawer Title
+              style: TextStyle(
+                fontSize: 24,
+                fontStyle: FontStyle.italic, // ✅ Italic Style
+                fontFamily: 'Poppins', // ✅ Beautiful Font
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 1.2,
+              ),
             ),
           ),
           _drawerItem(context, 'Home', 0),
@@ -85,9 +98,17 @@ class NavigationDrawer extends StatelessWidget {
 
   Widget _drawerItem(BuildContext context, String title, int index) {
     return ListTile(
-      title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 18)),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
+        ),
+      ),
       onTap: () {
-        Navigator.pop(context); 
+        Navigator.pop(context);
         onItemSelected(index);
       },
     );
