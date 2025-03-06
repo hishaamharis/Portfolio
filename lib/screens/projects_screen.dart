@@ -12,6 +12,7 @@ class ProjectsScreen extends StatelessWidget {
     final List<Project> projects = [
       Project(
           name: 'Drive Duo',
+          subtitle: 'Car Rental App',
           description:
               'Car Rental App that allows users to rent cars from other users.',
           imageUrl: 'assets/images/drive_duo.png',
@@ -26,6 +27,7 @@ class ProjectsScreen extends StatelessWidget {
           githubUrl: 'https://github.com/hishaamharis/drive_duo.git'),
       Project(
         name: 'Quiz!z',
+        subtitle: 'A quiz app.',
         description:
             'A quiz app.Used to test your knowledge with multiple choice questions in different categories',
         imageUrl: 'assets/images/quiziz.png', // Replace with your image path
@@ -41,6 +43,7 @@ class ProjectsScreen extends StatelessWidget {
       ),
       Project(
           name: 'Task manager',
+          subtitle: 'A task management app.',
           description: 'A task management app.Used to manage your daily tasks',
           imageUrl:
               'assets/images/task_manager.png', // Replace with your image path
@@ -56,8 +59,9 @@ class ProjectsScreen extends StatelessWidget {
           githubUrl: "https://github.com/hishaamharis/task_manager.git"),
       Project(
         name: 'Projectsmate',
+        subtitle: 'A project management app',
         description: 'A project management app',
-        imageUrl: AppImage.projectsmateImage, 
+        imageUrl: AppImage.projectsmateImage,
         techStack: [
           'Flutter',
           'Dart',
@@ -102,32 +106,41 @@ class ProjectsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Increase to 3 cards per row
-                    crossAxisSpacing: 8, // Spacing between columns
-                    mainAxisSpacing: 8, // Spacing between rows
-                    childAspectRatio: 1.5, // Adjust card aspect ratio
-                  ),
-                  itemCount: projects.length,
-                  itemBuilder: (context, index) {
-                    return ProjectCard(
-                      project: projects[index],
-                      onTap: () {
-                        // Navigate to the project details screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProjectDetailsScreen(
-                              project: projects[index],
-                            ),
-                          ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    int crossAxisCount = 3; // Default: 3 cards per row
+
+                    if (constraints.maxWidth < 600) {
+                      crossAxisCount = 2; // Medium screens: 2 cards per row
+                    }
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        childAspectRatio:
+                            1.4, // Adjust for better card proportions
+                      ),
+                      itemCount: projects.length,
+                      itemBuilder: (context, index) {
+                        return ProjectCard(
+                          project: projects[index],
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectDetailsScreen(
+                                  project: projects[index],
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     );
                   },
                 ),
-              ),
+              )
             ],
           ),
         ),
