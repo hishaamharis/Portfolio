@@ -8,7 +8,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'widgets/navbar.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // ✅ Initialize binding
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -66,12 +66,14 @@ class PortfolioPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 if (index == 3) {
                   return Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize:
+                        MainAxisSize.min, // Takes only the space it needs
                     children: [
                       _getSection(index), // ContactScreen
                     ],
                   );
                 } else {
+                  // Other sections with fixed height
                   return SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: _getSection(index),
@@ -87,10 +89,8 @@ class PortfolioPage extends StatelessWidget {
 
   Widget _drawerItem(String title, int index) {
     return ListTile(
-      title: Text(
-        title,
-        style: const TextStyle(color: Colors.white, fontSize: 18),
-      ),
+      title: Text(title,
+          style: const TextStyle(color: Colors.white, fontSize: 18)),
       onTap: () {
         scrollToSection(index);
         _scaffoldKey.currentState?.closeEndDrawer();
