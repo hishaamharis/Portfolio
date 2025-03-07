@@ -51,21 +51,15 @@ class ProjectDetailsScreen extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: Image.asset(
-                        project.imageUrl,
-                        width: double.infinity,
-                        height: 220,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: double.infinity,
-                          height: 220,
-                          color: Colors.grey.shade800,
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "Image not found",
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 16),
-                          ),
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          maxHeight: 250, // Set a maximum height for the image
+                        ),
+                        child: Image.asset(
+                          project.imageUrl,
+                          width: double.infinity, // Full width
+                          fit: BoxFit
+                              .contain, // Maintain aspect ratio and fit within the container
                         ),
                       ),
                     ),
