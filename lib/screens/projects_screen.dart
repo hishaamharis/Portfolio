@@ -15,7 +15,7 @@ class ProjectsScreen extends StatelessWidget {
           subtitle: 'Car Rental App',
           description:
               'Car Rental App that allows users to rent cars from other users.',
-          imageUrl: 'assets/images/drive_duo.png',
+          imageUrl: AppImage.driveDuoImage,
           techStack: [
             'Flutter',
             'Dart',
@@ -30,7 +30,7 @@ class ProjectsScreen extends StatelessWidget {
         subtitle: 'A quiz app.',
         description:
             'A quiz app.Used to test your knowledge with multiple choice questions in different categories',
-        imageUrl: 'assets/images/quiziz.png', // Replace with your image path
+        imageUrl: AppImage.quizizImage, 
         techStack: [
           'Flutter',
           'Dart',
@@ -45,8 +45,7 @@ class ProjectsScreen extends StatelessWidget {
           name: 'Task manager',
           subtitle: 'A task management app.',
           description: 'A task management app.Used to manage your daily tasks',
-          imageUrl:
-              'assets/images/task_manager.png', // Replace with your image path
+          imageUrl: AppImage.taskManagerImage, 
           techStack: [
             'Flutter',
             'Dart',
@@ -85,9 +84,9 @@ class ProjectsScreen extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xff0A192F), // Dark blue
-              Color(0xff172A45), // Slightly lighter blue
-              Color(0xff203A4C), // Even lighter blue
+              Color(0xff0A192F), 
+              Color(0xff172A45), 
+              Color(0xff203A4C), 
             ],
           ),
         ),
