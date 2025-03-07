@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/widgets/hoverable_button.dart';
+import 'package:portfolio/widgets/hoverable_tech_container.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:portfolio/model/project_model.dart';
 
@@ -20,6 +22,9 @@ class ProjectDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isMobile = screenWidth < 600;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,104 +46,73 @@ class ProjectDetailsScreen extends StatelessWidget {
             colors: [Color(0xff0D253F), Color(0xff1B3A57)],
           ),
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        constraints: const BoxConstraints(
-                          maxHeight: 250, // Set a maximum height for the image
-                        ),
-                        child: Image.asset(
-                          project.imageUrl,
-                          width: double.infinity, // Full width
-                          fit: BoxFit
-                              .contain, // Maintain aspect ratio and fit within the container
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      project.name,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      project.description,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Tech Stack',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: project.techStack
-                          .map((tech) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: Colors.blueAccent.withOpacity(0.7),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  tech,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                    const SizedBox(height: 24),
-                    if (project.githubUrl != null &&
-                        project.githubUrl!.isNotEmpty)
-                      Center(
-                        child: ElevatedButton.icon(
-                          onPressed: _launchGitHub,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 28, vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          icon: const Icon(Icons.open_in_new,
-                              color: Colors.white),
-                          label: const Text(
-                            'View on GitHub',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                  ],
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16.0 : 40.0,
+            vertical: 20.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: isMobile ? 200 : 300,
+                  ),
+                  child: Image.asset(
+                    project.imageUrl,
+                    width: double.infinity,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Text(
+                project.name,
+                style: TextStyle(
+                  fontSize: isMobile ? 24 : 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                project.description,
+                style: TextStyle(
+                  fontSize: isMobile ? 14 : 16,
+                  color: Colors.white70,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Tech Stack',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                alignment:
+                    isMobile ? WrapAlignment.center : WrapAlignment.start,
+                children: project.techStack
+                    .map((tech) => HoverableTechContainer(tech: tech))
+                    .toList(),
+              ),
+              const SizedBox(height: 24),
+              if (project.githubUrl != null && project.githubUrl!.isNotEmpty)
+                Center(
+                  child: HoverableButton(
+                    onPressed: _launchGitHub,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
