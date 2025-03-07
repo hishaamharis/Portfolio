@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio/constants/app_image.dart';
-import 'package:portfolio/model/project_model.dart';
+import 'package:portfolio/data/project_data.dart';
 import 'package:portfolio/screens/project_detail_screen.dart';
 import 'package:portfolio/widgets/project_card.dart';
 
@@ -9,74 +8,6 @@ class ProjectsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Project> projects = [
-      Project(
-          name: 'Drive Duo',
-          subtitle: 'Car Rental App',
-          description:
-              'Car Rental App that allows users to rent cars from other users.',
-          imageUrl: AppImage.driveDuoImage,
-          techStack: [
-            'Flutter',
-            'Dart',
-            'Firebase Core',
-            'Firebase Authentication',
-            'Provider',
-            'Razorpay',
-          ],
-          githubUrl: 'https://github.com/hishaamharis/drive_duo.git'),
-      Project(
-        name: 'Quiz!z',
-        subtitle: 'A quiz app.',
-        description:
-            'A quiz app.Used to test your knowledge with multiple choice questions in different categories',
-        imageUrl: AppImage.quizizImage, 
-        techStack: [
-          'Flutter',
-          'Dart',
-          'Firebase Core',
-          'Firebase Authentication',
-          'Google Sign-In',
-          'Cloud Firestore',
-          'Flutter Native Splash',
-        ],
-      ),
-      Project(
-          name: 'Task manager',
-          subtitle: 'A task management app.',
-          description: 'A task management app.Used to manage your daily tasks',
-          imageUrl: AppImage.taskManagerImage, 
-          techStack: [
-            'Flutter',
-            'Dart',
-            'GetX',
-            'Hive',
-            'Hive Flutter',
-            'UUID',
-            'Intl',
-          ],
-          githubUrl: "https://github.com/hishaamharis/task_manager.git"),
-      Project(
-        name: 'Projectsmate',
-        subtitle: 'A project management app',
-        description: 'A project management app',
-        imageUrl: AppImage.projectsmateImage,
-        techStack: [
-          'Flutter',
-          'Dart',
-          'Dio',
-          'Awesome Dio Interceptor',
-          'Firebase Core',
-          'Firebase Authentication',
-          'Google Sign-In',
-          'GoRouter',
-          'Provider',
-          'Shared Preferences',
-          'Flutter Secure Storage',
-        ],
-      ),
-    ];
-
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -84,9 +15,9 @@ class ProjectsScreen extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xff0A192F), 
-              Color(0xff172A45), 
-              Color(0xff203A4C), 
+              Color(0xff0A192F),
+              Color(0xff172A45),
+              Color(0xff203A4C),
             ],
           ),
         ),
@@ -101,6 +32,15 @@ class ProjectsScreen extends StatelessWidget {
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Tap on a project to view details →', // Add this line
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white70, // Use a subtle color
+                  fontStyle: FontStyle.italic,
                 ),
               ),
               const SizedBox(height: 16),
