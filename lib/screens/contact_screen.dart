@@ -11,71 +11,79 @@ class ContactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xff0A192F),
-              Color(0xff172A45),
-              Color(0xff203A4C),
-            ],
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xff0A192F),
+            Color(0xff172A45),
+            Color(0xff203A4C),
+          ],
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-                child: Column(
+      ),
+      child: ListView(
+        shrinkWrap: true, // Ensures the ListView takes only the space it needs
+        physics:
+            const NeverScrollableScrollPhysics(), // Disables internal scrolling
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+            child: Column(
+              children: [
+                const Text(
+                  'Get in Touch',
+                  style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Feel free to reach out for collaborations or just a friendly hello!',
+                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 30),
+                Wrap(
+                  spacing: 20,
+                  runSpacing: 20,
+                  alignment: WrapAlignment.center,
                   children: [
-                    const Text(
-                      'Get in Touch',
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+                    ContactItem(
+                      icon: SvgPicture.asset(AppIcons.mailIcon,
+                          height: 24, width: 24),
+                      label: 'Email',
+                      value: 'muhammadhisham231@gmail.com',
+                      onTap: () => LaunchServices.launchEmail(
+                          'muhammadhisham231@gmail.com'),
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Feel free to reach out for collaborations or just a friendly hello!',
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
-                      textAlign: TextAlign.center,
+                    ContactItem(
+                      icon: SvgPicture.asset(AppIcons.githubIcon,
+                          height: 24, width: 24),
+                      label: 'GitHub',
+                      value: 'github.com/hishaamharis',
+                      onTap: () => LaunchServices.launchEmail(
+                          'https://github.com/hishaamharis'),
                     ),
-                    const SizedBox(height: 30),
-                    Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        ContactItem(
-                          icon: SvgPicture.asset(AppIcons.mailIcon, height: 24, width: 24),
-                          label: 'Email',
-                          value: 'muhammadhisham231@gmail.com',
-                          onTap: () => LaunchServices.launchEmail('muhammadhisham231@gmail.com'),
-                        ),
-                        ContactItem(
-                          icon: SvgPicture.asset(AppIcons.githubIcon, height: 24, width: 24),
-                          label: 'GitHub',
-                          value: 'github.com/hishaamharis',
-                          onTap: () => LaunchServices.launchEmail('https://github.com/hishaamharis'),
-                        ),
-                        ContactItem(
-                          icon: SvgPicture.asset(AppIcons.linkedinIcon, height: 24, width: 24),
-                          label: 'LinkedIn',
-                          value: 'linkedin.com/in/muhammad-hisham-h',
-                          onTap: () => LaunchServices.launchWebsite('https://www.linkedin.com/in/muhammad-hisham-h/'),
-                        ),
-                      ],
+                    ContactItem(
+                      icon: SvgPicture.asset(AppIcons.linkedinIcon,
+                          height: 24, width: 24),
+                      label: 'LinkedIn',
+                      value: 'linkedin.com/in/muhammad-hisham-h',
+                      onTap: () => LaunchServices.launchWebsite(
+                          'https://www.linkedin.com/in/muhammad-hisham-h/'),
                     ),
-                    const SizedBox(height: 40),
-                    const ContactForm(),
                   ],
                 ),
-              ),
-              const Footer(),
-            ],
+                const SizedBox(height: 40),
+                const ContactForm(),
+              ],
+            ),
           ),
-        ),
+          const Footer(),
+        ],
       ),
     );
   }

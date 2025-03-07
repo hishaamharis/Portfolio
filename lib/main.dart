@@ -8,6 +8,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'widgets/navbar.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // ✅ Initialize binding
   runApp(const MyApp());
 }
 
@@ -27,7 +28,7 @@ class PortfolioPage extends StatelessWidget {
   PortfolioPage({super.key});
 
   final ItemScrollController _scrollController = ItemScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // ✅ Added scaffoldKey
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void scrollToSection(int index) {
     _scrollController.scrollTo(
@@ -40,13 +41,13 @@ class PortfolioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // ✅ Pass scaffoldKey here
-      endDrawer: Drawer( // ✅ Add the Right End Drawer
-        child: Container(color: const Color(0xFF1A1A2E),
+      key: _scaffoldKey,
+      endDrawer: Drawer(
+        child: Container(
+          color: const Color(0xFF1A1A2E),
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-          
               _drawerItem('Home', 0),
               _drawerItem('About', 1),
               _drawerItem('Projects', 2),
@@ -57,17 +58,25 @@ class PortfolioPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          NavBar(onItemSelected: scrollToSection, scaffoldKey: _scaffoldKey), // ✅ Pass scaffoldKey
+          NavBar(onItemSelected: scrollToSection, scaffoldKey: _scaffoldKey),
           Expanded(
             child: ScrollablePositionedList.builder(
               itemScrollController: _scrollController,
               itemCount: 4,
               itemBuilder: (context, index) {
-                return Container(
-                  height: MediaQuery.of(context).size.height,
-                  alignment: Alignment.center,
-                  child: _getSection(index),
-                );
+                if (index == 3) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _getSection(index), // ContactScreen
+                    ],
+                  );
+                } else {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: _getSection(index),
+                  );
+                }
               },
             ),
           ),
@@ -78,7 +87,10 @@ class PortfolioPage extends StatelessWidget {
 
   Widget _drawerItem(String title, int index) {
     return ListTile(
-      title: Text(title,style: const TextStyle(color: Colors.white, fontSize: 18)),
+      title: Text(
+        title,
+        style: const TextStyle(color: Colors.white, fontSize: 18),
+      ),
       onTap: () {
         scrollToSection(index);
         _scaffoldKey.currentState?.closeEndDrawer();
