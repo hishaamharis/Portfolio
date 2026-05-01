@@ -1,71 +1,41 @@
-// Separate StatefulWidget for hover effect
-
 import 'package:flutter/material.dart';
+import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_motion.dart';
+import 'package:portfolio/theme/app_typography.dart';
 
 class HoverableTechContainer extends StatefulWidget {
   final String tech;
+  final Color accent;
 
-  const HoverableTechContainer({super.key, required this.tech});
+  const HoverableTechContainer({
+    super.key,
+    required this.tech,
+    this.accent = AppColors.accent,
+  });
 
   @override
-  _HoverableTechContainerState createState() => _HoverableTechContainerState();
+  State<HoverableTechContainer> createState() => _HoverableTechContainerState();
 }
 
 class _HoverableTechContainerState extends State<HoverableTechContainer> {
-  bool isHovered = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final Color color = _hovered ? widget.accent : AppColors.mute;
     return MouseRegion(
-      onEnter: (_) => setState(() => isHovered = true),
-      onExit: (_) => setState(() => isHovered = false),
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(12),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            gradient: isHovered
-                ? const LinearGradient(
-                    colors: [Colors.purpleAccent, Colors.deepPurple],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : const LinearGradient(
-                    colors: [Colors.blueAccent, Colors.cyan],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: isHovered
-                ? [
-                    BoxShadow(
-                      color: Colors.purple.withOpacity(0.5),
-                      blurRadius: 12,
-                      spreadRadius: 2,
-                    )
-                  ]
-                : [
-                    const BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      spreadRadius: 1,
-                    )
-                  ],
-            border: Border.all(
-              color: isHovered ? Colors.white : Colors.transparent,
-              width: 2,
-            ),
-          ),
-          child: Text(
-            widget.tech,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.8,
-            ),
-          ),
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: AppMotion.hover,
+        curve: AppMotion.easeOut,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border.all(color: color.withOpacity(_hovered ? 1 : 0.4)),
+        ),
+        child: Text(
+          widget.tech.toLowerCase(),
+          style: AppType.mono(size: 12, color: color, letterSpacing: 0.4),
         ),
       ),
     );

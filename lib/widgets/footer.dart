@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:portfolio/constants/app_icons.dart';
+import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_motion.dart';
+import 'package:portfolio/theme/app_typography.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatelessWidget {
@@ -8,102 +9,103 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final bool isMobile = screenSize.width < 600;
+    final bool isMobile = MediaQuery.of(context).size.width < 700;
 
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 15 : 20,
-        horizontal: isMobile ? 10 : 20,
+        horizontal: isMobile ? 20 : 48,
+        vertical: 32,
       ),
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF1A1A2E), // Dark blue
-            Color(0xFF16213E), // Slightly lighter blue
-          ],
+        color: AppColors.ink,
+        border: Border(
+          top: BorderSide(color: AppColors.border, width: 1),
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Social Links with Icons - Responsive Layout
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _footerLink(
-                icon: AppIcons.githubIcon,
-                title: 'GitHub',
-                url: 'https://github.com/hishaamharis',
-                isMobile: isMobile,
-              ),
-              SizedBox(width: isMobile ? 10 : 20),
-              _footerLink(
-                icon: AppIcons.linkedinIcon,
-                title: 'LinkedIn',
-                url: 'https://www.linkedin.com/in/muhammad-hisham-h/',
-                isMobile: isMobile,
-              ),
-              SizedBox(width: isMobile ? 10 : 20),
-              _footerLink(
-                icon: AppIcons.instagramIcon,
-                title: 'Instagram',
-                url: 'https://www.instagram.com/hishaamharis/',
-                isMobile: isMobile,
-              ),
-            ],
-          ),
-          SizedBox(height: isMobile ? 8 : 12),
-          // Copyright Text
-          Text(
-            '© 2025 Muhammad Hisham. All Rights Reserved.',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: isMobile ? 12 : 14,
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _socials(),
+                const SizedBox(height: 16),
+                _copy(),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _copy(),
+                _socials(),
+              ],
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
     );
   }
 
-  Widget _footerLink({
-    required String icon,
-    required String title,
-    required String url,
-    required bool isMobile,
-  }) {
-    return InkWell(
-      onTap: () => _launchUrl(url),
-      hoverColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(icon, width: isMobile ? 20 : 24),
-          SizedBox(width: isMobile ? 6 : 8),
-          Text(
-            title,
-            style: TextStyle(
-              color: const Color(0xff94acf4),
-              fontSize: isMobile ? 14 : 16,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ],
-      ),
+  Widget _copy() {
+    return Text(
+      '© 2026 Muhammad Hisham',
+      style: AppType.mono(color: AppColors.mute),
     );
   }
 
-  void _launchUrl(String url) async {
-    final Uri uri = Uri.parse(url);
+  Widget _socials() {
+    return const Wrap(
+      spacing: 24,
+      runSpacing: 8,
+      children: [
+        _FooterLink(label: 'GitHub', url: 'https://github.com/hishaamharis'),
+        _FooterLink(
+          label: 'LinkedIn',
+          url: 'https://www.linkedin.com/in/muhammad-hisham-h/',
+        ),
+        _FooterLink(
+          label: 'Instagram',
+          url: 'https://www.instagram.com/hishaamharis/',
+        ),
+      ],
+    );
+  }
+}
+
+class _FooterLink extends StatefulWidget {
+  final String label;
+  final String url;
+
+  const _FooterLink({required this.label, required this.url});
+
+  @override
+  State<_FooterLink> createState() => _FooterLinkState();
+}
+
+class _FooterLinkState extends State<_FooterLink> {
+  bool _hovered = false;
+
+  Future<void> _open() async {
+    final uri = Uri.parse(widget.url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: _open,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedDefaultTextStyle(
+          duration: AppMotion.hover,
+          curve: AppMotion.easeOut,
+          style: AppType.mono(
+            color: _hovered ? AppColors.accent : AppColors.mute,
+          ),
+          child: Text(widget.label),
+        ),
+      ),
+    );
   }
 }

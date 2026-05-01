@@ -1,57 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_motion.dart';
+import 'package:portfolio/theme/app_typography.dart';
 
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
   final Function(int) onItemSelected;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const NavBar({super.key, required this.onItemSelected, required this.scaffoldKey});
+  const NavBar({
+    super.key,
+    required this.onItemSelected,
+    required this.scaffoldKey,
+  });
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    bool isSmallScreen = screenWidth < 600;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = screenWidth < 700;
 
-    return AppBar(
-      backgroundColor: const Color(0xFF1A1A2E),
-      title: Text(
-        'Muhammad Hisham H', // ✅ Updated Title
-        style: TextStyle(
-          fontSize: isSmallScreen ? 20 : 24,
-          fontFamily: 'MonteCarlo', 
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-          letterSpacing: 1.5,
+    return Container(
+      height: kToolbarHeight,
+      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 20 : 48),
+      decoration: const BoxDecoration(
+        color: AppColors.ink,
+        border: Border(
+          bottom: BorderSide(color: AppColors.border, width: 1),
         ),
       ),
-      actions: [
-        if (!isSmallScreen) ...[
-          _navButton('Home', 0),
-          _navButton('About', 1),
-          _navButton('Projects', 2),
-          _navButton('Contact', 3),
-          const SizedBox(width: 10),
-        ] else
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () {
-              scaffoldKey.currentState?.openEndDrawer();
-            },
+      child: Row(
+        children: [
+          Text(
+            'PORTFOLIO · 2026',
+            style: AppType.mono(letterSpacing: 1.6, color: AppColors.mute),
           ),
-      ],
-    );
-  }
-
-  Widget _navButton(String title, int index) {
-    return TextButton(
-      onPressed: () => onItemSelected(index),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
+          const Spacer(),
+          if (!isSmallScreen) ...[
+            _NavLink(label: 'Home', onTap: () => onItemSelected(0)),
+            const SizedBox(width: 28),
+            _NavLink(label: 'About', onTap: () => onItemSelected(1)),
+            const SizedBox(width: 28),
+            _NavLink(label: 'Projects', onTap: () => onItemSelected(2)),
+            const SizedBox(width: 28),
+            _NavLink(label: 'Contact', onTap: () => onItemSelected(3)),
+          ] else
+            IconButton(
+              icon: const Icon(Icons.menu, color: AppColors.bone),
+              onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
+            ),
+        ],
       ),
     );
   }
@@ -60,57 +57,40 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class NavigationDrawer extends StatelessWidget {
-  final Function(int) onItemSelected;
+class _NavLink extends StatefulWidget {
+  final String label;
+  final VoidCallback onTap;
 
-  const NavigationDrawer({super.key, required this.onItemSelected});
+  const _NavLink({required this.label, required this.onTap});
+
+  @override
+  State<_NavLink> createState() => _NavLinkState();
+}
+
+class _NavLinkState extends State<_NavLink> {
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      elevation: 16.0,
-      backgroundColor: const Color(0xFF1A1A2E),
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF16213E)),
-            child: Text(
-              'Muhammad Hisham H', // ✅ Updated Drawer Title
-              style: TextStyle(
-                fontSize: 24,
-                fontStyle: FontStyle.italic, // ✅ Italic Style
-                fontFamily: 'Poppins', // ✅ Beautiful Font
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 1.2,
-              ),
-            ),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedDefaultTextStyle(
+          duration: AppMotion.hover,
+          curve: AppMotion.easeOut,
+          style: GoogleFonts.jetBrainsMono(
+            fontSize: 13,
+            letterSpacing: 1.2,
+            color: _hovered ? AppColors.bone : AppColors.mute,
+            fontWeight: FontWeight.w500,
           ),
-          _drawerItem(context, 'Home', 0),
-          _drawerItem(context, 'About', 1),
-          _drawerItem(context, 'Projects', 2),
-          _drawerItem(context, 'Contact', 3),
-        ],
-      ),
-    );
-  }
-
-  Widget _drawerItem(BuildContext context, String title, int index) {
-    return ListTile(
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
+          child: Text(widget.label),
         ),
       ),
-      onTap: () {
-        Navigator.pop(context);
-        onItemSelected(index);
-      },
     );
   }
 }

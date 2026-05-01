@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:portfolio/screens/about_screen.dart';
 import 'package:portfolio/screens/contact_screen.dart';
 import 'package:portfolio/screens/home_screen.dart';
 import 'package:portfolio/screens/projects_screen.dart';
+import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_theme.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'widgets/navbar.dart';
@@ -19,6 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Muhammad Hisham — Portfolio',
+      theme: AppTheme.build(),
       home: PortfolioPage(),
     );
   }
@@ -42,16 +47,19 @@ class PortfolioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: AppColors.ink,
       endDrawer: Drawer(
-        child: Container(
-          color: const Color(0xFF1A1A2E),
-          child: ListView(
-            padding: EdgeInsets.zero,
+        backgroundColor: AppColors.ink,
+        shape: const RoundedRectangleBorder(),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _drawerItem('Home', 0),
-              _drawerItem('About', 1),
-              _drawerItem('Projects', 2),
-              _drawerItem('Contact', 3),
+              const SizedBox(height: 24),
+              _drawerItem(context, 'Home', 0),
+              _drawerItem(context, 'About', 1),
+              _drawerItem(context, 'Projects', 2),
+              _drawerItem(context, 'Contact', 3),
             ],
           ),
         ),
@@ -64,21 +72,14 @@ class PortfolioPage extends StatelessWidget {
               itemScrollController: _scrollController,
               itemCount: 4,
               itemBuilder: (context, index) {
-                if (index == 3) {
-                  return Column(
-                    mainAxisSize:
-                        MainAxisSize.min, // Takes only the space it needs
-                    children: [
-                      _getSection(index), // ContactScreen
-                    ],
-                  );
-                } else {
-                  // Other sections with fixed height
+                if (index == 0) {
                   return SizedBox(
-                    height: MediaQuery.of(context).size.height,
+                    height: MediaQuery.of(context).size.height -
+                        kToolbarHeight,
                     child: _getSection(index),
                   );
                 }
+                return _getSection(index);
               },
             ),
           ),
@@ -87,13 +88,19 @@ class PortfolioPage extends StatelessWidget {
     );
   }
 
-  Widget _drawerItem(String title, int index) {
+  Widget _drawerItem(BuildContext context, String label, int index) {
     return ListTile(
-      title: Text(title,
-          style: const TextStyle(color: Colors.white, fontSize: 18)),
+      title: Text(
+        label,
+        style: GoogleFonts.jetBrainsMono(
+          color: AppColors.bone,
+          fontSize: 14,
+          letterSpacing: 1.2,
+        ),
+      ),
       onTap: () {
+        Navigator.of(context).pop();
         scrollToSection(index);
-        _scaffoldKey.currentState?.closeEndDrawer();
       },
     );
   }

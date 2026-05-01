@@ -1,68 +1,74 @@
-// Hoverable GitHub Button
 import 'package:flutter/material.dart';
+import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_motion.dart';
+import 'package:portfolio/theme/app_typography.dart';
 
 class HoverableButton extends StatefulWidget {
   final VoidCallback onPressed;
+  final String label;
+  final Color accent;
 
-  const HoverableButton({super.key, required this.onPressed});
+  const HoverableButton({
+    super.key,
+    required this.onPressed,
+    this.label = 'View on GitHub',
+    this.accent = AppColors.accent,
+  });
 
   @override
-  _HoverableButtonState createState() => _HoverableButtonState();
+  State<HoverableButton> createState() => _HoverableButtonState();
 }
 
 class _HoverableButtonState extends State<HoverableButton> {
-  bool isHovered = false;
+  bool _hovered = false;
+  bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => isHovered = true),
-      onExit: (_) => setState(() => isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        decoration: BoxDecoration(
-          gradient: isHovered
-              ? const LinearGradient(
-                  colors: [Colors.purpleAccent, Colors.deepPurple],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-              : const LinearGradient(
-                  colors: [Colors.blueAccent, Colors.cyan],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: isHovered
-              ? [
-                  BoxShadow(
-                    color: Colors.purple.withOpacity(0.5),
-                    blurRadius: 12,
-                    spreadRadius: 2,
-                  )
-                ]
-              : [
-                  const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    spreadRadius: 1,
-                  )
-                ],
-        ),
-        child: ElevatedButton.icon(
-          onPressed: widget.onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) {
+          setState(() => _pressed = false);
+          widget.onPressed();
+        },
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedScale(
+          scale: _pressed ? 0.96 : 1.0,
+          duration: AppMotion.hover,
+          curve: AppMotion.easeOut,
+          child: AnimatedContainer(
+            duration: AppMotion.hover,
+            curve: AppMotion.easeOut,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+            decoration: BoxDecoration(
+              color: _hovered ? widget.accent : Colors.transparent,
+              border: Border.all(color: widget.accent, width: 1),
             ),
-          ),
-          icon: const Icon(Icons.open_in_new, color: Colors.white),
-          label: const Text(
-            'View on GitHub',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.label.toUpperCase(),
+                  style: AppType.mono(
+                    size: 12,
+                    color: _hovered ? AppColors.ink : widget.accent,
+                    letterSpacing: 1.6,
+                    weight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Icon(
+                  Icons.arrow_outward,
+                  size: 16,
+                  color: _hovered ? AppColors.ink : widget.accent,
+                ),
+              ],
+            ),
           ),
         ),
       ),

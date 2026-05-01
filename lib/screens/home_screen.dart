@@ -1,107 +1,143 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:portfolio/constants/app_image.dart';
+import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_motion.dart';
+import 'package:portfolio/theme/app_typography.dart';
+import 'package:portfolio/widgets/section_reveal.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // Function to download resume
-  void _downloadResume() async {
-    const url = 'https://drive.google.com/uc?export=download&id=18pZVazUU_rXt5Dq_MhBW_PhcTqDdG5Mh';
-    final uri = Uri.parse(url);
-
+  Future<void> _downloadResume() async {
+    final uri = Uri.parse(
+      'https://drive.google.com/uc?export=download&id=18pZVazUU_rXt5Dq_MhBW_PhcTqDdG5Mh',
+    );
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint("Could not launch $url");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double avatarRadius = screenWidth < 600 ? 60 : 80;
-    double titleFontSize = screenWidth < 600 ? 26 : 32;
-    double subtitleFontSize = screenWidth < 600 ? 18 : 22;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isMobile = screenWidth < 700;
+    final double horizontalPad = isMobile ? 24 : 80;
 
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xff16213e),
-              Color(0xff0f3460),
-              Color(0xff1a1a2e),
-            ],
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    final double greetingSize = isMobile ? 28 : 44;
+    final double nameSize = isMobile ? 64 : 96;
+
+    return Container(
+      color: AppColors.ink,
+      padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1100),
+          child: SectionReveal(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundImage: const AssetImage(AppImage.meImage),
-                  backgroundColor: Colors.transparent,
-                ),
-                const SizedBox(height: 20),
                 Text(
-                  "Hello, I'm Muhammad Hisham!",
-                  style: GoogleFonts.poppins(
-                    fontSize: titleFontSize,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                  ),
-                  textAlign: TextAlign.center,
+                  'FLUTTER DEVELOPER · PROJECT MANAGER',
+                  style: AppType.eyebrow(),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 28),
                 Text(
-                  "Flutter Developer | Mobile & Web Apps",
-                  style: GoogleFonts.poppins(
-                    fontSize: subtitleFontSize,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
+                  "Hi, I'm",
+                  style: AppType.display(
+                    size: greetingSize,
+                    weight: FontWeight.w400,
+                    height: 1.0,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: 200,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    onPressed: _downloadResume,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.download, color: Colors.white, size: 20),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            "Resume",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                const SizedBox(height: 8),
+                Transform.rotate(
+                  angle: -0.035,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Muhammad Hisham',
+                    style: AppType.signature(size: nameSize),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: Text(
+                    'I build cross-platform apps with Flutter, lead them through to release as a project manager, and keep the bar high — informed by years on the QA side.',
+                    style: AppType.body(
+                      size: isMobile ? 15 : 16,
+                      color: AppColors.mute,
                     ),
                   ),
+                ),
+                const SizedBox(height: 40),
+                _ResumeButton(onTap: _downloadResume),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ResumeButton extends StatefulWidget {
+  final VoidCallback onTap;
+  const _ResumeButton({required this.onTap});
+
+  @override
+  State<_ResumeButton> createState() => _ResumeButtonState();
+}
+
+class _ResumeButtonState extends State<_ResumeButton> {
+  bool _hovered = false;
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) {
+          setState(() => _pressed = false);
+          widget.onTap();
+        },
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedScale(
+          scale: _pressed ? 0.96 : 1.0,
+          duration: AppMotion.hover,
+          curve: AppMotion.easeOut,
+          child: AnimatedContainer(
+            duration: AppMotion.hover,
+            curve: AppMotion.easeOut,
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+            decoration: BoxDecoration(
+              color: _hovered ? AppColors.accent : Colors.transparent,
+              border: Border.all(
+                color: AppColors.accent,
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'DOWNLOAD RESUME',
+                  style: AppType.mono(
+                    size: 12,
+                    letterSpacing: 1.6,
+                    weight: FontWeight.w600,
+                    color: _hovered ? AppColors.ink : AppColors.accent,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Icon(
+                  Icons.arrow_outward,
+                  size: 16,
+                  color: _hovered ? AppColors.ink : AppColors.accent,
                 ),
               ],
             ),

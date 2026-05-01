@@ -1,93 +1,122 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/model/project_model.dart';
+import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_motion.dart';
+import 'package:portfolio/theme/app_typography.dart';
 
 class ProjectCard extends StatefulWidget {
   final Project project;
+  final int index;
   final VoidCallback onTap;
 
   const ProjectCard({
     super.key,
     required this.project,
+    required this.index,
     required this.onTap,
   });
 
   @override
-  _ProjectCardState createState() => _ProjectCardState();
+  State<ProjectCard> createState() => _ProjectCardState();
 }
 
 class _ProjectCardState extends State<ProjectCard> {
-  bool _isHovered = false;
-  bool _isTapped = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final Color accent = widget.project.accent;
+    final Color borderColor = _hovered ? accent : AppColors.border;
+    final Color numberColor = _hovered ? accent : AppColors.border;
+
+    final String index = (widget.index + 1).toString().padLeft(2, '0');
+    final String techCount = widget.project.techStack.length.toString().padLeft(2, '0');
+
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _isTapped = true),
-        onTapUp: (_) {
-          setState(() => _isTapped = false);
-          widget.onTap(); // Trigger tap action
-        },
-        onTapCancel: () => setState(() => _isTapped = false),
-        child: Transform.scale(
-          scale: _isTapped ? 0.96 : 1.0,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-            decoration: BoxDecoration(
-              color: _isHovered ? const Color(0xFF25395C) : const Color(0xFF1E2A47), // Hover effect
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: _isHovered ? const Color(0xFF5A8FD7) : const Color(0xFF4A6FA5), // Border changes on hover
-                width: 1.5,
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: AppMotion.hover,
+          curve: AppMotion.easeOut,
+          transform: Matrix4.translationValues(0, _hovered ? -4 : 0, 0),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: AppColors.ink,
+            border: Border.all(color: borderColor, width: 1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${widget.project.year} · ${widget.project.category} · $techCount stack',
+                      style: AppType.mono(size: 11, color: AppColors.mute),
+                    ),
+                  ),
+                  AnimatedDefaultTextStyle(
+                    duration: AppMotion.hover,
+                    curve: AppMotion.easeOut,
+                    style: AppType.signature(size: 36, color: numberColor),
+                    child: Text(index),
+                  ),
+                ],
               ),
-              boxShadow: _isHovered
-                  ? [
-                      BoxShadow(
-                        color: Colors.blueAccent.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 3,
-                        offset: const Offset(2, 6),
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 6,
-                        spreadRadius: 2,
-                        offset: const Offset(2, 4),
-                      ),
-                    ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Project Name
-                Text(
-                  widget.project.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+              const SizedBox(height: 28),
+              Text(
+                widget.project.name,
+                style: AppType.heading(size: 26),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.project.subtitle,
+                style: AppType.body(
+                  size: 13,
+                  color: AppColors.mute,
+                  height: 1.5,
                 ),
-                const SizedBox(height: 6),
-          
-                // Project Subtitle
-                Text(
-                  widget.project.subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade300,
-                  ),
-                ),
-              ],
-            ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 24),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: widget.project.techStack.take(3).map((tech) {
+                  final bool isPrimary = tech.toLowerCase() == 'flutter';
+                  return _TechPill(label: tech, primary: isPrimary);
+                }).toList(),
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _TechPill extends StatelessWidget {
+  final String label;
+  final bool primary;
+
+  const _TechPill({required this.label, this.primary = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final Color color = primary ? AppColors.accent : AppColors.mute;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: color.withOpacity(primary ? 1 : 0.4), width: 1),
+      ),
+      child: Text(
+        label.toLowerCase(),
+        style: AppType.mono(size: 11, color: color, letterSpacing: 0.4),
       ),
     );
   }
