@@ -13,6 +13,7 @@ class ProjectsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isMobile = screenWidth < 700;
+    final bool isNarrow = screenWidth < 420;
     final double horizontalPad = isMobile ? 24 : 80;
 
     return Container(
@@ -27,11 +28,15 @@ class ProjectsScreen extends StatelessWidget {
               children: [
                 Text('02 · WORK', style: AppType.eyebrow()),
                 const SizedBox(height: 24),
-                Text(
-                  'Selected work, 2024 – 2026.',
-                  style: AppType.display(
-                    size: isMobile ? 32 : 44,
-                    height: 1.1,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Selected work, 2024 – 2026.',
+                    style: AppType.display(
+                      size: isNarrow ? 26 : (isMobile ? 32 : 44),
+                      height: 1.1,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 40),

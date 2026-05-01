@@ -21,10 +21,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isMobile = screenWidth < 700;
+    final bool isNarrow = screenWidth < 420;
     final double horizontalPad = isMobile ? 24 : 80;
 
-    final double greetingSize = isMobile ? 28 : 44;
-    final double nameSize = isMobile ? 64 : 96;
+    final double greetingSize = isNarrow ? 24 : (isMobile ? 28 : 44);
+    final double nameSize = isNarrow ? 48 : (isMobile ? 64 : 96);
 
     return Container(
       color: AppColors.ink,
@@ -51,12 +52,16 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Transform.rotate(
-                  angle: -0.035,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Muhammad Hisham',
-                    style: AppType.signature(size: nameSize),
+                  child: Transform.rotate(
+                    angle: -0.035,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Muhammad Hisham',
+                      style: AppType.signature(size: nameSize),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 32),

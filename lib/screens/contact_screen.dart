@@ -14,6 +14,7 @@ class ContactScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isMobile = screenWidth < 700;
+    final bool isNarrow = screenWidth < 420;
     final double horizontalPad = isMobile ? 24 : 80;
 
     return Container(
@@ -34,11 +35,15 @@ class ContactScreen extends StatelessWidget {
                     children: [
                       Text('03 · CONTACT', style: AppType.eyebrow()),
                       const SizedBox(height: 24),
-                      Text(
-                        "Let's build something.",
-                        style: AppType.display(
-                          size: isMobile ? 36 : 56,
-                          height: 1.05,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Let's build something.",
+                          style: AppType.display(
+                            size: isNarrow ? 30 : (isMobile ? 36 : 56),
+                            height: 1.05,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -112,13 +117,17 @@ class ContactScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Transform.rotate(
-                        angle: -0.035,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Muhammad Hisham',
-                          style: AppType.signature(
-                            size: isMobile ? 44 : 56,
+                        child: Transform.rotate(
+                          angle: -0.035,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Muhammad Hisham',
+                            style: AppType.signature(
+                              size: isNarrow ? 36 : (isMobile ? 44 : 56),
+                            ),
                           ),
                         ),
                       ),

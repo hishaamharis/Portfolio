@@ -26,6 +26,7 @@ class ProjectDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isMobile = screenWidth < 700;
+    final bool isNarrow = screenWidth < 420;
     final double horizontalPad = isMobile ? 24 : 80;
     final Color accent = project.accent;
 
@@ -71,11 +72,15 @@ class ProjectDetailsScreen extends StatelessWidget {
                             style: AppType.eyebrow(color: accent),
                           ),
                           const SizedBox(height: 20),
-                          Text(
-                            project.name,
-                            style: AppType.display(
-                              size: isMobile ? 40 : 64,
-                              height: 1.05,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              project.name,
+                              style: AppType.display(
+                                size: isNarrow ? 32 : (isMobile ? 40 : 64),
+                                height: 1.05,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),

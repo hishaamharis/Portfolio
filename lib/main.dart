@@ -73,9 +73,11 @@ class PortfolioPage extends StatelessWidget {
               itemCount: 4,
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height -
-                        kToolbarHeight,
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height -
+                          kToolbarHeight,
+                    ),
                     child: _getSection(index),
                   );
                 }
