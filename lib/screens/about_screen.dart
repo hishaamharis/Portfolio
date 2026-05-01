@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/constants/app_image.dart';
 import 'package:portfolio/theme/app_colors.dart';
+import 'package:portfolio/theme/app_motion.dart';
 import 'package:portfolio/theme/app_typography.dart';
 import 'package:portfolio/widgets/section_reveal.dart';
 import 'package:portfolio/widgets/skill_chip.dart';
@@ -38,7 +39,7 @@ class AboutScreen extends StatelessWidget {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _portrait(isMobile: true),
+                            const _AnimatedPortrait(isMobile: true),
                             const SizedBox(height: 32),
                             _bio(),
                           ],
@@ -48,7 +49,7 @@ class AboutScreen extends StatelessWidget {
                           children: [
                             Expanded(flex: 3, child: _bio()),
                             const SizedBox(width: 64),
-                            Expanded(flex: 2, child: _portrait()),
+                            const Expanded(flex: 2, child: _AnimatedPortrait()),
                           ],
                         ),
                   const SizedBox(height: 56),
@@ -137,19 +138,151 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _portrait({bool isMobile = false}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.zero,
+}
+
+class _AnimatedPortrait extends StatefulWidget {
+  final bool isMobile;
+  const _AnimatedPortrait({this.isMobile = false});
+
+  @override
+  State<_AnimatedPortrait> createState() => _AnimatedPortraitState();
+}
+
+class _AnimatedPortraitState extends State<_AnimatedPortrait>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _accentT;
+  late final Animation<double> _imageT;
+  late final Animation<double> _captionT;
+  bool _hovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1100),
+    );
+    _accentT = CurvedAnimation(
+      parent: _ctrl,
+      curve: const Interval(0.0, 0.45, curve: AppMotion.easeOut),
+    );
+    _imageT = CurvedAnimation(
+      parent: _ctrl,
+      curve: const Interval(0.20, 0.75, curve: AppMotion.easeOut),
+    );
+    _captionT = CurvedAnimation(
+      parent: _ctrl,
+      curve: const Interval(0.55, 1.0, curve: AppMotion.easeOut),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 250), () {
+        if (mounted) _ctrl.forward();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double accentSize = widget.isMobile ? 56 : 88;
+    final double accentPeek = widget.isMobile ? 14 : 20;
+    final double captionSize = widget.isMobile ? 10 : 11;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: AspectRatio(
         aspectRatio: 4 / 5,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.border, width: 1),
-            image: const DecorationImage(
-              image: AssetImage(AppImage.meImage),
-              fit: BoxFit.cover,
-            ),
-          ),
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) {
+            final double a = _accentT.value;
+            final double i = _imageT.value;
+            final double c = _captionT.value;
+
+            return Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  right: -accentPeek,
+                  bottom: -accentPeek,
+                  width: accentSize,
+                  height: accentSize,
+                  child: Opacity(
+                    opacity: a,
+                    child: Transform.translate(
+                      offset: Offset(
+                        (1 - a) * 32 + (_hovered ? 6 : 0),
+                        (1 - a) * 32 + (_hovered ? 6 : 0),
+                      ),
+                      child: Container(color: AppColors.accent),
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: i,
+                    child: Transform.scale(
+                      scale: (0.96 + 0.04 * i) * (_hovered ? 1.015 : 1.0),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.border,
+                            width: 1,
+                          ),
+                          image: const DecorationImage(
+                            image: AssetImage(AppImage.meImage),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 14,
+                  bottom: 14,
+                  child: Opacity(
+                    opacity: c,
+                    child: Transform.translate(
+                      offset: Offset(0, (1 - c) * 12),
+                      child: AnimatedContainer(
+                        duration: AppMotion.hover,
+                        curve: AppMotion.easeOut,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.ink.withOpacity(0.78),
+                          border: Border.all(
+                            color: _hovered
+                                ? AppColors.accent
+                                : AppColors.border,
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          'MUHAMMAD HISHAM  ·  KERALA  ·  \u201926',
+                          style: AppType.mono(
+                            size: captionSize,
+                            letterSpacing: 1.2,
+                            color: AppColors.bone,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
