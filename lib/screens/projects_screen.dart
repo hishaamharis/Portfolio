@@ -14,6 +14,7 @@ class ProjectsScreen extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isMobile = screenWidth < 700;
     final bool isNarrow = screenWidth < 420;
+    final bool useSingleColumn = screenWidth < 900;
     final double horizontalPad = isMobile ? 24 : 80;
 
     return Container(
@@ -40,46 +41,59 @@ class ProjectsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: isMobile ? 1 : 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: isMobile ? 1.4 : 1.25,
-                  ),
-                  itemCount: projects.length,
-                  itemBuilder: (context, index) {
-                    return ProjectCard(
-                      project: projects[index],
-                      index: index,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) =>
-                                ProjectDetailsScreen(project: projects[index]),
-                            transitionsBuilder: (_, animation, __, child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
-                            transitionDuration:
-                                const Duration(milliseconds: 300),
+                if (useSingleColumn)
+                  Column(
+                    children: [
+                      for (int i = 0; i < projects.length; i++) ...[
+                        if (i > 0) const SizedBox(height: 16),
+                        _buildCard(context, i),
+                      ],
+                    ],
+                  )
+                else
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      const spacing = 16.0;
+                      final cardWidth =
+                          (constraints.maxWidth - spacing) / 2;
+                      return Wrap(
+                        spacing: spacing,
+                        runSpacing: spacing,
+                        children: List.generate(
+                          projects.length,
+                          (i) => SizedBox(
+                            width: cardWidth,
+                            child: _buildCard(context, i),
                           ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                        ),
+                      );
+                    },
+                  ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCard(BuildContext context, int index) {
+    return ProjectCard(
+      project: projects[index],
+      index: index,
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                ProjectDetailsScreen(project: projects[index]),
+            transitionsBuilder: (_, animation, __, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 300),
+          ),
+        );
+      },
     );
   }
 }

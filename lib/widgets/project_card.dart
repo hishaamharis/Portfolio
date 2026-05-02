@@ -42,59 +42,117 @@ class _ProjectCardState extends State<ProjectCard> {
           duration: AppMotion.hover,
           curve: AppMotion.easeOut,
           transform: Matrix4.translationValues(0, _hovered ? -4 : 0, 0),
-          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: AppColors.ink,
             border: Border.all(color: borderColor, width: 1),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      '${widget.project.year} · ${widget.project.category} · $techCount stack',
-                      style: AppType.mono(size: 11, color: AppColors.mute),
+              _ProjectImage(
+                imageUrl: widget.project.cardImageUrl ?? widget.project.imageUrl,
+                hovered: _hovered,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${widget.project.year} · ${widget.project.category} · $techCount stack',
+                            style: AppType.mono(size: 11, color: AppColors.mute),
+                          ),
+                        ),
+                        AnimatedDefaultTextStyle(
+                          duration: AppMotion.hover,
+                          curve: AppMotion.easeOut,
+                          style: AppType.signature(size: 36, color: numberColor),
+                          child: Text(index),
+                        ),
+                      ],
                     ),
-                  ),
-                  AnimatedDefaultTextStyle(
-                    duration: AppMotion.hover,
-                    curve: AppMotion.easeOut,
-                    style: AppType.signature(size: 36, color: numberColor),
-                    child: Text(index),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 28),
-              Text(
-                widget.project.name,
-                style: AppType.heading(size: 26),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.project.subtitle,
-                style: AppType.body(
-                  size: 13,
-                  color: AppColors.mute,
-                  height: 1.5,
+                    const SizedBox(height: 20),
+                    Text(
+                      widget.project.name,
+                      style: AppType.heading(size: 26),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.project.subtitle,
+                      style: AppType.body(
+                        size: 13,
+                        color: AppColors.mute,
+                        height: 1.5,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 24),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: widget.project.techStack.take(3).map((tech) {
+                        final bool isPrimary = tech.toLowerCase() == 'flutter';
+                        return _TechPill(label: tech, primary: isPrimary);
+                      }).toList(),
+                    ),
+                  ],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 24),
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: widget.project.techStack.take(3).map((tech) {
-                  final bool isPrimary = tech.toLowerCase() == 'flutter';
-                  return _TechPill(label: tech, primary: isPrimary);
-                }).toList(),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ProjectImage extends StatelessWidget {
+  final String imageUrl;
+  final bool hovered;
+
+  const _ProjectImage({required this.imageUrl, required this.hovered});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 160,
+      width: double.infinity,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) =>
+                Container(color: AppColors.surface),
+          ),
+          AnimatedContainer(
+            duration: AppMotion.hover,
+            curve: AppMotion.easeOut,
+            color: AppColors.ink.withOpacity(hovered ? 0.25 : 0.55),
+          ),
+          IgnorePointer(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    AppColors.ink.withOpacity(0.6),
+                    AppColors.ink,
+                  ],
+                  stops: const [0.45, 0.82, 1.0],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

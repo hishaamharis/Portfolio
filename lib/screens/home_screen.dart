@@ -5,6 +5,69 @@ import 'package:portfolio/theme/app_typography.dart';
 import 'package:portfolio/widgets/section_reveal.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+class _AnimatedSignatureName extends StatefulWidget {
+  final String text;
+  final double size;
+
+  const _AnimatedSignatureName({required this.text, required this.size});
+
+  @override
+  State<_AnimatedSignatureName> createState() => _AnimatedSignatureNameState();
+}
+
+class _AnimatedSignatureNameState extends State<_AnimatedSignatureName>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _wipe;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    );
+    _wipe = CurvedAnimation(parent: _controller, curve: AppMotion.easeInOut);
+    _wipe.addListener(() => setState(() {}));
+    Future.delayed(const Duration(milliseconds: 700), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final p = _wipe.value;
+    return ShaderMask(
+      blendMode: BlendMode.dstIn,
+      shaderCallback: (bounds) {
+        const softEdge = 0.06;
+        final pos = -softEdge + p * (1 + 2 * softEdge);
+        final s1 = (pos - softEdge).clamp(0.0, 1.0);
+        final s2 = (pos + softEdge).clamp(0.0, 1.0);
+        final stops = s1 >= s2
+            ? <double>[s1, (s1 + 0.0001).clamp(0.0, 1.0)]
+            : <double>[s1, s2];
+        return LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          stops: stops,
+          colors: const [Colors.white, Colors.transparent],
+        ).createShader(bounds);
+      },
+      child: Text(
+        widget.text,
+        style: AppType.signature(size: widget.size),
+      ),
+    );
+  }
+}
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -24,7 +87,6 @@ class HomeScreen extends StatelessWidget {
     final bool isNarrow = screenWidth < 420;
     final double horizontalPad = isMobile ? 24 : 80;
 
-    final double greetingSize = isNarrow ? 24 : (isMobile ? 28 : 44);
     final double nameSize = isNarrow ? 48 : (isMobile ? 64 : 96);
 
     return Container(
@@ -43,24 +105,15 @@ class HomeScreen extends StatelessWidget {
                   style: AppType.eyebrow(),
                 ),
                 const SizedBox(height: 28),
-                Text(
-                  "Hi, I'm",
-                  style: AppType.display(
-                    size: greetingSize,
-                    weight: FontWeight.w400,
-                    height: 1.0,
-                  ),
-                ),
-                const SizedBox(height: 8),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
                   child: Transform.rotate(
                     angle: -0.035,
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Muhammad Hisham',
-                      style: AppType.signature(size: nameSize),
+                    child: _AnimatedSignatureName(
+                      text: 'Muhammad Hisham',
+                      size: nameSize,
                     ),
                   ),
                 ),

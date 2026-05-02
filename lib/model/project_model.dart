@@ -5,6 +5,7 @@ class Project {
   final String subtitle;
   final String description;
   final String imageUrl;
+  final String? cardImageUrl;
   final List<String> techStack;
   final String? githubUrl;
   final Color accent;
@@ -20,6 +21,7 @@ class Project {
     required this.accent,
     required this.year,
     required this.category,
+    this.cardImageUrl,
     this.githubUrl,
   });
 }
