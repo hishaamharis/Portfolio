@@ -3,9 +3,9 @@ import 'dart:convert';
 
 class EmailService {
   static Future<void> sendMessage(String name, String email, String message) async {
-    const serviceId = 'service_5lahwvs';  
-    const templateId = 'template_g1nll9x'; 
-    const userId = 'S83pSyIpNv_V_jzxl'; 
+    const serviceId = 'service_ae9p1sn';
+    const templateId = 'template_k87gs7t'; 
+    const userId = 'Y-W8bHk4qTLGpPjoU'; 
 
     final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
 
