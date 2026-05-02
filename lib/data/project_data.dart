@@ -42,6 +42,7 @@ final List<Project> projects = [
       'Cloud Firestore',
       'Flutter Native Splash',
     ],
+    githubUrl: 'https://github.com/hishaamharis/quizzes.git',
   ),
   Project(
     name: 'Task Manager',
